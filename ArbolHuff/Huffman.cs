@@ -56,5 +56,19 @@ namespace EDII_Lab03.ArbolHuff
 			Datos.Instance.ListaCod = MiArbol.ListaCodigos;
 		}
 
+		public byte[] CrearEncabezado(int noCaracteres)
+		{
+			double noElementos = Datos.Instance.ListaCod.LongCount();
+			string codigo = noCaracteres + "," + noElementos;
+			foreach (var cosa in Datos.Instance.ListaCod)
+			{
+				string p = Convert.ToString(cosa.caracter, 2);
+				codigo = codigo + "," + p;
+				codigo = codigo + "," + cosa.codigo;
+			}
+			byte[] encabezadoBytes = Encoding.ASCII.GetBytes(codigo + ",");
+			return encabezadoBytes;
+		}
+
 	}
 }
