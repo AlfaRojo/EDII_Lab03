@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text;
 using System.IO;
+using EDII_Lab03.Models;
+using EDII_Lab03.Helpers;
 
 namespace EDII_Lab03.ArbolHuff
 {
@@ -34,7 +36,6 @@ namespace EDII_Lab03.ArbolHuff
 					caracter = elemento,
 					probabilidad = prueba.probabilidad + 1
 				});
-
 			}
 			else
 			{
@@ -46,7 +47,14 @@ namespace EDII_Lab03.ArbolHuff
 			}
 		}
 
-
+		public void CrearArbol()
+		{
+			List<Nodo> frecuenciasORDEN = new List<Nodo>();
+			frecuenciasORDEN = frecuencias.OrderBy(x => x.probabilidad).ToList();
+			Arbol MiArbol = new Arbol();
+			MiArbol.EtiquetarNodo(MiArbol.ConstruirArbol(frecuenciasORDEN));
+			Datos.Instance.ListaCod = MiArbol.ListaCodigos;
+		}
 
 	}
 }
