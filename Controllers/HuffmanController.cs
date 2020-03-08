@@ -15,30 +15,14 @@ namespace EDII_Lab03.Controllers
     [ApiController]
     public class HuffmanController : ControllerBase
     {
-        const int bufferLength = 100;
-        public List<Caracteres> ListaCaracteresExistentes = new List<Caracteres>();
-        public int totalCaracteres;
-        public Dictionary<string, byte> diccionarioIndices = new Dictionary<string, byte>();
-        public string txtBin = "";
-        public string nombreArchivo;
-
-        public async Task<IActionResult> OnPostUploadAsync(List<IFormFile> files)
+        [HttpPost]
+        public void Post([FromForm(Name = "file")] IFormFile File)
         {
-            long size = files.Sum(f => f.Length);
-
-            foreach (var formFile in files)
+            using (FileStream thisFile = new FileStream(File.FileName, FileMode.OpenOrCreate))
             {
-                if (formFile.Length > 0)
-                {
-                    var filePath = Path.GetTempFileName();
-
-                    using (var stream = System.IO.File.Create(filePath))
-                    {
-                        await formFile.CopyToAsync(stream);
-                    }
-                }
+                //Llamar al método/clase de compresión
+                //*thisFile* es el nombre del archivo que contiene el texto
             }
-            return Ok(new { count = files.Count, size });
         }
     }
 }
