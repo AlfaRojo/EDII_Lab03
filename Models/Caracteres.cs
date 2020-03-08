@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace EDII_Lab03.Models
 {
     public class Caracteres : IComparable
