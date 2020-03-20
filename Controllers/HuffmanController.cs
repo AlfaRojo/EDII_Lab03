@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using EDII_Lab03.Models;
 using System.Threading.Tasks;
+using EDII_Lab03.ArbolHuff;
 using Microsoft.AspNetCore.Http;
 
 namespace EDII_Lab03.Controllers
@@ -18,10 +19,11 @@ namespace EDII_Lab03.Controllers
         [HttpPost]
         public void Post([FromForm(Name = "file")] IFormFile File)
         {
+            Huffman HuffmanCompress = new Huffman();
             using (FileStream thisFile = new FileStream(File.FileName, FileMode.OpenOrCreate))
             {
-                //Llamar al método/clase de compresión
-                //*thisFile* es el nombre del archivo que contiene el texto
+                var direccion = Path.GetFullPath(thisFile.Name);
+                HuffmanCompress.Leer(direccion);
             }
         }
     }

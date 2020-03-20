@@ -16,8 +16,26 @@ namespace EDII_Lab03.ArbolHuff
 
 		public int Leer(string direccion)
 		{
-			var noCaracteres = 0;
-			// metodo para leer archivo, que incremente el contador y llame al metodo "ConteoDeFrecuencia"
+			int noCaracteres = 0;
+			const int bufferLength = 80;
+			var buffer = new byte[bufferLength];
+			using (var file = new FileStream(direccion, FileMode.Open))
+			{
+				using (var reader = new BinaryReader(file))
+				{
+					while (reader.BaseStream.Position != reader.BaseStream.Length)
+					{
+						buffer = reader.ReadBytes(bufferLength);
+
+						foreach (var item in buffer)
+						{
+							noCaracteres++;
+							ConteoDeFrecuencia(item);
+						}
+					}
+					reader.ReadBytes(bufferLength);
+				}
+			}
 			return noCaracteres;
 		}
 
