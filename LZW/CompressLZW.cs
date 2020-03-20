@@ -22,24 +22,23 @@ namespace EDII_Lab03.LZW
         public void CompresionLZWImportar(FileStream ArchivoImportado)
         {
             Dictionary<string, int> LZWdiccionario = new Dictionary<string, int>();
-            Directory.CreateDirectory("~/App_Data/Importados/");
-            Directory.CreateDirectory("~/App_Data/Compresiones/");
-            var DireccionArchivo = string.Empty;
-            var archivoDireccion = "~/App_Data/Importados/";
-            DireccionArchivo = archivoDireccion + Path.GetFileName(ArchivoImportado.Name);
+            Directory.CreateDirectory("~/Data/Importados/");
+            Directory.CreateDirectory("~/Data/Compresiones/");
             var extension = Path.GetExtension(ArchivoImportado.Name);
+            var nombre = Path.GetFileName(ArchivoImportado.Name);
             var PropiedadesArchivoActual = new MiArchivo();
-            FileInfo ArchivoAnalizado = new FileInfo(DireccionArchivo);
+            FileInfo ArchivoAnalizado = new FileInfo(ArchivoImportado.Name);
             PropiedadesArchivoActual.TamanoArchivoDescomprimido = ArchivoAnalizado.Length;
             PropiedadesArchivoActual.NombreArchivoOriginal = ArchivoAnalizado.Name;
             nombreArchivo = ArchivoAnalizado.Name.Split('.')[0];
             var listaCaracteresExistentes = new List<byte>();
             var listaCaracteresBinario = new List<string>();
+            var ASCIIescribir = new List<int>();
             using (var Lectura = new BinaryReader(ArchivoImportado))
             {
-                using (var writeStream = new FileStream((@"~/App_Data/Compresiones/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
+                using (FileStream writeStream = new FileStream((@"~/Data/Compresiones/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
                 {
-                    using (var writer = new BinaryWriter(writeStream))
+                    using (BinaryWriter writer = new BinaryWriter(writeStream))
                     {
                         var byteBuffer = new byte[bufferLength];
                         while (Lectura.BaseStream.Position != Lectura.BaseStream.Length)
@@ -64,7 +63,6 @@ namespace EDII_Lab03.LZW
                         Lectura.BaseStream.Position = 0;
                         var thisCaracter = string.Empty;
                         var myOutput = string.Empty;
-                        var ASCIIescribir = new List<int>();
                         while (Lectura.BaseStream.Position != Lectura.BaseStream.Length)
                         {
                             byteBuffer = Lectura.ReadBytes(bufferLength);
@@ -138,7 +136,7 @@ namespace EDII_Lab03.LZW
                             foreach (var item in ASCIIescribir)
                             {
                                 writer.Write(Convert.ToByte(Convert.ToInt32(item)));
-                                using (FileStream archivoFinal = new FileStream((@"~/App_Data/Compresiones/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
+                                using (FileStream archivoFinal = new FileStream((@"~/Data/Compresiones/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
                                 {
                                     archivoFinal.WriteByte(Convert.ToByte(Convert.ToInt32(item)));
                                 }
@@ -154,13 +152,24 @@ namespace EDII_Lab03.LZW
                     }
                 }
             }
-            var FileVirtualPath = @"~/App_Data/Compresiones/" + nombreArchivo + ".lzw";
+            var FileVirtualPath = @"~Data/Compresiones/" + nombreArchivo + ".lzw";
         }
         #region Utilizables
+
+        string OtroArchivo(string fileName, string sourcePath, string targetPath)
+        {
+            string sourceFile = Path.Combine(sourcePath, fileName);
+            string destFile = Path.Combine(targetPath, fileName);
+            {
+                Directory.CreateDirectory(targetPath);
+            }
+            File.Copy(sourceFile, destFile, true);
+            return targetPath;
+        }
         void GuaradarCompresiones(MiArchivo Archivo)
         {
             string archivoLeer = string.Empty;
-            string ArchivoMapeo = "~/App_Data/";
+            string ArchivoMapeo = "~/Data/";
             archivoLeer = ArchivoMapeo + Path.GetFileName("ListaCompresiones");
             using (var writer = new StreamWriter(archivoLeer, true))
             {
