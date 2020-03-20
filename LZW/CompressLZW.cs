@@ -22,8 +22,8 @@ namespace EDII_Lab03.LZW
         public void CompresionLZWImportar(FileStream ArchivoImportado)
         {
             Dictionary<string, int> LZWdiccionario = new Dictionary<string, int>();
-            Directory.CreateDirectory("/Data/Importados/");
-            Directory.CreateDirectory("/Data/Compresiones/");
+            Directory.CreateDirectory("~/LZW/Importados/");
+            Directory.CreateDirectory("~/LZW/Compresiones/");
             var extension = Path.GetExtension(ArchivoImportado.Name);
             var nombre = Path.GetFileName(ArchivoImportado.Name);
             var PropiedadesArchivoActual = new MiArchivo();
@@ -36,7 +36,7 @@ namespace EDII_Lab03.LZW
             var ASCIIescribir = new List<int>();
             using (var Lectura = new BinaryReader(ArchivoImportado))
             {
-                using (FileStream writeStream = new FileStream((@"/Data/Compresiones/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
+                using (FileStream writeStream = new FileStream((@"~/LZW/Compresiones/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
                 {
                     using (BinaryWriter writer = new BinaryWriter(writeStream))
                     {
@@ -136,7 +136,7 @@ namespace EDII_Lab03.LZW
                             foreach (var item in ASCIIescribir)
                             {
                                 writer.Write(Convert.ToByte(Convert.ToInt32(item)));
-                                using (FileStream archivoFinal = new FileStream((@"/Data/Compresiones/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
+                                using (FileStream archivoFinal = new FileStream((@"~/LZW/Compresiones/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
                                 {
                                     archivoFinal.WriteByte(Convert.ToByte(Convert.ToInt32(item)));
                                 }
@@ -152,7 +152,7 @@ namespace EDII_Lab03.LZW
                     }
                 }
             }
-            var FileVirtualPath = @"Data/Compresiones/" + nombreArchivo + ".lzw";
+            var FileVirtualPath = @"~/LZW/Compresiones/" + nombreArchivo + ".lzw";
         }
         #region Utilizables
 
@@ -169,7 +169,7 @@ namespace EDII_Lab03.LZW
         void GuaradarCompresiones(MiArchivo Archivo)
         {
             string archivoLeer = string.Empty;
-            string ArchivoMapeo = "/Data/";
+            string ArchivoMapeo = "~/LZW/";
             archivoLeer = ArchivoMapeo + Path.GetFileName("ListaCompresiones");
             using (var writer = new StreamWriter(archivoLeer, true))
             {

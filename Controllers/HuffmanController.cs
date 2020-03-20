@@ -17,13 +17,12 @@ namespace EDII_Lab03.Controllers
     public class HuffmanController : ControllerBase
     {
         [HttpPost]
-        public void Post([FromForm(Name = "file")] IFormFile File)
+        public void Post([FromForm(Name = "file")] IFormFile file)
         {
-            Huffman HuffmanCompress = new Huffman();
-            using (FileStream thisFile = new FileStream(File.FileName, FileMode.OpenOrCreate))
+            CompressHuffman HuffmanCompress = new CompressHuffman();
+            using (FileStream thisFile = new FileStream(file.FileName, FileMode.OpenOrCreate))
             {
-                var direccion = Path.GetFullPath(thisFile.Name);
-                HuffmanCompress.Leer(direccion);
+                HuffmanCompress.CompresionHuffmanImportar(thisFile);
             }
         }
     }
