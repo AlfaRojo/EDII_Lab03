@@ -1,12 +1,5 @@
-﻿using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Web;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using Microsoft.AspNetCore.Mvc;
-using EDII_Lab03.Models;
-using System.Threading.Tasks;
 using EDII_Lab03.ArbolHuff;
 using Microsoft.AspNetCore.Http;
 
@@ -17,10 +10,10 @@ namespace EDII_Lab03.Controllers
     public class HuffmanController : ControllerBase
     {
         [HttpPost]
-        public void Post([FromForm(Name = "file")] IFormFile file)
+        public void Post([FromForm(Name = "file")] IFormFile File)
         {
             CompressHuffman HuffmanCompress = new CompressHuffman();
-            using (FileStream thisFile = new FileStream(file.FileName, FileMode.OpenOrCreate))
+            using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
             {
                 HuffmanCompress.CompresionHuffmanImportar(thisFile);
             }

@@ -19,7 +19,7 @@ namespace EDII_Lab03.Controllers
         [HttpPost]
         public void Post([FromForm(Name = "file")] IFormFile File)
         {
-            using (FileStream thisFile = new FileStream(File.FileName, FileMode.OpenOrCreate))
+            using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
             {
                 compressLZW.CompresionLZWImportar(thisFile);
             }

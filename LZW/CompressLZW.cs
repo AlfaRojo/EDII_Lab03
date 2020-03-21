@@ -22,8 +22,6 @@ namespace EDII_Lab03.LZW
         public void CompresionLZWImportar(FileStream ArchivoImportado)
         {
             Dictionary<string, int> LZWdiccionario = new Dictionary<string, int>();
-            Directory.CreateDirectory("~/LZW/Importados/");
-            Directory.CreateDirectory("~/LZW/Compresiones/");
             var extension = Path.GetExtension(ArchivoImportado.Name);
             var nombre = Path.GetFileName(ArchivoImportado.Name);
             var PropiedadesArchivoActual = new MiArchivo();
@@ -36,7 +34,7 @@ namespace EDII_Lab03.LZW
             var ASCIIescribir = new List<int>();
             using (var Lectura = new BinaryReader(ArchivoImportado))
             {
-                using (FileStream writeStream = new FileStream((@"~/LZW/Compresiones/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
+                using (FileStream writeStream = new FileStream((@"TusArchivos/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
                 {
                     using (BinaryWriter writer = new BinaryWriter(writeStream))
                     {
@@ -136,7 +134,7 @@ namespace EDII_Lab03.LZW
                             foreach (var item in ASCIIescribir)
                             {
                                 writer.Write(Convert.ToByte(Convert.ToInt32(item)));
-                                using (FileStream archivoFinal = new FileStream((@"~/LZW/Compresiones/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
+                                using (FileStream archivoFinal = new FileStream((@"TusArchivos/" + nombreArchivo + ".lzw"), FileMode.OpenOrCreate))
                                 {
                                     archivoFinal.WriteByte(Convert.ToByte(Convert.ToInt32(item)));
                                 }
@@ -148,14 +146,13 @@ namespace EDII_Lab03.LZW
                         PropiedadesArchivoActual.RazonCompresion = Convert.ToDouble(PropiedadesArchivoActual.TamanoArchivoDescomprimido) / Convert.ToDouble(PropiedadesArchivoActual.TamanoArchivoComprimido);
                         PropiedadesArchivoActual.PorcentajeReduccion = (Convert.ToDouble(1) - PropiedadesArchivoActual.FactorCompresion).ToString();
                         PropiedadesArchivoActual.FormatoCompresion = ".lzw";
-                        GuaradarCompresiones(PropiedadesArchivoActual);
+                        Factor FactorCompresion = new Factor();
+                        FactorCompresion.GuaradarCompresiones(PropiedadesArchivoActual, "LZW");
                     }
                 }
             }
-            var FileVirtualPath = @"~/LZW/Compresiones/" + nombreArchivo + ".lzw";
         }
         #region Utilizables
-
         string OtroArchivo(string fileName, string sourcePath, string targetPath)
         {
             string sourceFile = Path.Combine(sourcePath, fileName);
@@ -165,19 +162,6 @@ namespace EDII_Lab03.LZW
             }
             File.Copy(sourceFile, destFile, true);
             return targetPath;
-        }
-        void GuaradarCompresiones(MiArchivo Archivo)
-        {
-            string archivoLeer = string.Empty;
-            string ArchivoMapeo = "~/LZW/";
-            archivoLeer = ArchivoMapeo + Path.GetFileName("ListaCompresiones");
-            using (var writer = new StreamWriter(archivoLeer, true))
-            {
-                if (!(Archivo.TamanoArchivoComprimido <= 0 && Archivo.TamanoArchivoDescomprimido <= 0))
-                {
-                    writer.WriteLine(Archivo.NombreArchivoOriginal + "|" + Archivo.TamanoArchivoDescomprimido + "|" + Archivo.TamanoArchivoComprimido + "|" + Archivo.FactorCompresion + "|" + Archivo.RazonCompresion + "|" + Archivo.PorcentajeReduccion + "|" + Archivo.FormatoCompresion);
-                }
-            }
         }
         #endregion //Métodos ajenos a compresiones, solo auxiliares
     }

@@ -12,32 +12,31 @@ namespace EDII_Lab03.ArbolHuff
     public class Huffman
     {
         List<Nodo> frecuencias = new List<Nodo>();
-        //
-
-        public int Leer(FileStream direccion)
+        public int Leer(string direccion)
         {
             int noCaracteres = 0;
             const int bufferLength = 80;
             var buffer = new byte[bufferLength];
             var File = direccion;
-            using (var reader = new BinaryReader(direccion))
+            using (var Lectura = new FileStream(direccion, FileMode.Open))
             {
-                while (reader.BaseStream.Position != reader.BaseStream.Length)
+                using (var reader = new BinaryReader(Lectura))
                 {
-                    buffer = reader.ReadBytes(bufferLength);
-
-                    foreach (var item in buffer)
+                    while (reader.BaseStream.Position != reader.BaseStream.Length)
                     {
-                        noCaracteres++;
-                        ConteoDeFrecuencia(item);
-                    }
-                }
-                reader.ReadBytes(bufferLength);
-            }
+                        buffer = reader.ReadBytes(bufferLength);
 
+                        foreach (var item in buffer)
+                        {
+                            noCaracteres++;
+                            ConteoDeFrecuencia(item);
+                        }
+                    }
+                    reader.ReadBytes(bufferLength);
+                } 
+            }
             return noCaracteres;
         }
-
         public void ConteoDeFrecuencia(byte elemento)
         {
             int posicionLista;
@@ -63,7 +62,6 @@ namespace EDII_Lab03.ArbolHuff
                 });
             }
         }
-
         public void CrearArbol()
         {
             List<Nodo> frecuenciasORDEN = new List<Nodo>();
@@ -72,7 +70,6 @@ namespace EDII_Lab03.ArbolHuff
             MiArbol.EtiquetarNodo(MiArbol.ConstruirArbol(frecuenciasORDEN));
             Datos.Instance.ListaCod = MiArbol.ListaCodigos;
         }
-
         public byte[] CrearEncabezado(int noCaracteres)
         {
             double noElementos = Datos.Instance.ListaCod.LongCount();
@@ -86,6 +83,5 @@ namespace EDII_Lab03.ArbolHuff
             byte[] encabezadoBytes = Encoding.ASCII.GetBytes(codigo + ",");
             return encabezadoBytes;
         }
-
     }
 }

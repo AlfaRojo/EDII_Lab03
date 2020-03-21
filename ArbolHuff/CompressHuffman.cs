@@ -5,24 +5,26 @@ using System.Threading.Tasks;
 using System.IO;
 using EDII_Lab03.Helpers;
 using System.Text;
+using EDII_Lab03.Models;
 
 namespace EDII_Lab03.ArbolHuff
 {
     public class CompressHuffman
     {
 
-        public void CompresionHuffmanImportar(FileStream PostFile)
+        public void CompresionHuffmanImportar(FileStream ArchivoAnalizado)
         {
-            Directory.CreateDirectory("~/Huffman/Compresiones/");
-            Directory.CreateDirectory("~/Huffman/Descompresiones/");
-            string nombreArchivo = Path.GetFileNameWithoutExtension(PostFile.Name);
-            string extension = Path.GetExtension(PostFile.Name);
+            string nombreArchivo = Path.GetFileNameWithoutExtension(ArchivoAnalizado.Name);
+            string extension = Path.GetExtension(ArchivoAnalizado.Name);
             var huffman = new Huffman();
             var fileVirtualPath = "";
-            PostFile.Close();
+            var PropiedadesArchivoActual = new MiArchivo();
+            PropiedadesArchivoActual.TamanoArchivoDescomprimido = ArchivoAnalizado.Length;
+            ArchivoAnalizado.Close();
+            PropiedadesArchivoActual.NombreArchivoOriginal = ArchivoAnalizado.Name;
             if (extension == ".huff")
             {
-                using (FileStream archivo = new FileStream("~/Huffman/Descompresiones/" + nombreArchivo + ".txt", FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                using (FileStream archivo = new FileStream("TusArchivos/" + nombreArchivo + ".txt", FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
                     int contador = 0;
                     int contadorCarac = 0;
@@ -34,7 +36,7 @@ namespace EDII_Lab03.ArbolHuff
                     int bufferLength = 80;
                     var buffer = new byte[bufferLength];
                     string textoCifrado = string.Empty;
-                    using (var file = new FileStream(PostFile.Name, FileMode.Open))
+                    using (var file = new FileStream(ArchivoAnalizado.Name, FileMode.Open))
                     {
                         using (var reader = new BinaryReader(file))
                         {
@@ -112,14 +114,15 @@ namespace EDII_Lab03.ArbolHuff
                     }
                 };
                 Datos.Instance.DicCarcacteres.Clear();
-                fileVirtualPath = @"~/Huffman/Descompresiones/" + nombreArchivo + ".txt";
+                fileVirtualPath = @"TusArchivos/" + nombreArchivo + ".txt";
             }
             else
             {
-                int cantidadCaracteres = huffman.Leer(PostFile);
+                var direccion = Path.GetFullPath(ArchivoAnalizado.Name);
+                int cantidadCaracteres = huffman.Leer(direccion);
                 huffman.CrearArbol();
                 byte[] encabezado = huffman.CrearEncabezado(cantidadCaracteres);
-                using (FileStream archivo = new FileStream("~/Huffman/Compresiones/" + nombreArchivo + ".huff", FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                using (FileStream archivo = new FileStream("TusArchivos/" + nombreArchivo + ".huff", FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
                     foreach (var item in encabezado)
                     {
@@ -128,7 +131,7 @@ namespace EDII_Lab03.ArbolHuff
                     int bufferLength = 80;
                     var buffer = new byte[bufferLength];
                     string textoCifrado = string.Empty;
-                    using (var file = new FileStream(PostFile.Name, FileMode.Open))
+                    using (var file = new FileStream(ArchivoAnalizado.Name, FileMode.Open))
                     {
                         using (var reader = new BinaryReader(file))
                         {
@@ -161,8 +164,15 @@ namespace EDII_Lab03.ArbolHuff
                         textoCifrado = textoCifrado.PadRight(8, '0');
                         byte byteEsc = Convert.ToByte(textoCifrado, 2);
                     }
+                    PropiedadesArchivoActual.TamanoArchivoComprimido = archivo.Length;
+                    PropiedadesArchivoActual.FactorCompresion = Convert.ToDouble(PropiedadesArchivoActual.TamanoArchivoComprimido) / Convert.ToDouble(PropiedadesArchivoActual.TamanoArchivoDescomprimido);
+                    PropiedadesArchivoActual.RazonCompresion = Convert.ToDouble(PropiedadesArchivoActual.TamanoArchivoDescomprimido) / Convert.ToDouble(PropiedadesArchivoActual.TamanoArchivoComprimido);
+                    PropiedadesArchivoActual.PorcentajeReduccion = (Convert.ToDouble(1) - PropiedadesArchivoActual.FactorCompresion).ToString();
+                    PropiedadesArchivoActual.FormatoCompresion = ".lzw";
+                    fileVirtualPath = @"TusArchivos/" + nombreArchivo + ".huff";
+                    Factor FactorCompresion = new Factor();
+                    FactorCompresion.GuaradarCompresiones(PropiedadesArchivoActual, "Huffman");
                 };
-                fileVirtualPath = @"~/Huffman/Compresiones/" + nombreArchivo + ".huff";
             }
         }
     }
