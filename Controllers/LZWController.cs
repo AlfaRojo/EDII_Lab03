@@ -14,15 +14,28 @@ namespace EDII_Lab03.Controllers
     [ApiController]
     public class LZWController : ControllerBase
     {
-        CompressLZW compressLZW = new CompressLZW();
 
         [HttpPost]
-        public void Post([FromForm(Name = "file")] IFormFile File)
+        public ActionResult Post([FromForm(Name = "file")] IFormFile File)
         {
-            using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+            CompressLZW compressLZW = new CompressLZW();
+            var extensionTipo = Path.GetExtension(File.FileName);
+            if (extensionTipo == ".txt")
             {
-                compressLZW.CompresionLZWImportar(thisFile);
+                using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+                {
+                    compressLZW.CompresionLZWImportar(thisFile);
+                }
             }
+            else if (extensionTipo == ".lzw")
+            {
+                using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+                {
+                    compressLZW.CompresionLZWExportar(thisFile);
+                }
+            }
+            else { return NotFound(); }
+            return Ok();
         }
     }
 }

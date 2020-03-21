@@ -11,7 +11,10 @@ namespace EDII_Lab03.ArbolHuff
 {
     public class CompressHuffman
     {
-
+        public void CompresionHuffmanExportar(FileStream ArchivoAnalizado)
+        { 
+        
+        }
         public void CompresionHuffmanImportar(FileStream ArchivoAnalizado)
         {
             string nombreArchivo = Path.GetFileNameWithoutExtension(ArchivoAnalizado.Name);

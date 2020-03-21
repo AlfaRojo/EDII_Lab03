@@ -19,6 +19,11 @@ namespace EDII_Lab03.LZW
         public string TextoEnBinario = "";
         public string nombreArchivo;
 
+        public void CompresionLZWExportar(FileStream ArchivoImportado)
+        { 
+            //Descompresion de LZW
+        }
+
         public void CompresionLZWImportar(FileStream ArchivoImportado)
         {
             Dictionary<string, int> LZWdiccionario = new Dictionary<string, int>();

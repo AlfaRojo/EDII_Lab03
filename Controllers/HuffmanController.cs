@@ -10,13 +10,26 @@ namespace EDII_Lab03.Controllers
     public class HuffmanController : ControllerBase
     {
         [HttpPost]
-        public void Post([FromForm(Name = "file")] IFormFile File)
+        public ActionResult Post([FromForm(Name = "file")] IFormFile File)
         {
+            var extensionTipo = Path.GetExtension(File.FileName);
             CompressHuffman HuffmanCompress = new CompressHuffman();
-            using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+            if (extensionTipo == ".txt")
             {
-                HuffmanCompress.CompresionHuffmanImportar(thisFile);
+                using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+                {
+                    HuffmanCompress.CompresionHuffmanImportar(thisFile);
+                }
             }
+            else if (extensionTipo == ".huff")
+            {
+                using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+                {
+                    HuffmanCompress.CompresionHuffmanExportar(thisFile);
+                }
+            }
+            else { return NotFound(); }
+            return Ok();
         }
     }
 }
