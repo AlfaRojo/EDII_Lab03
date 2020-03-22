@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace EDII_Lab03.Models
 {
@@ -10,9 +6,8 @@ namespace EDII_Lab03.Models
     {
         public void GuaradarCompresiones(MiArchivo Archivo, string tipo)
         {
-            string archivoLeer = string.Empty;
             string ArchivoMapeo = "TusArchivos/" + tipo;
-            archivoLeer = ArchivoMapeo + Path.GetFileName("ListaCompresiones");
+            string archivoLeer = ArchivoMapeo + Path.GetFileName("ListaCompresiones");
             using (var writer = new StreamWriter(archivoLeer, true))
             {
                 if (!(Archivo.TamanoArchivoComprimido <= 0 && Archivo.TamanoArchivoDescomprimido <= 0))

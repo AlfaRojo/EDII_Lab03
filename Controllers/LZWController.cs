@@ -18,24 +18,31 @@ namespace EDII_Lab03.Controllers
         [HttpPost]
         public ActionResult Post([FromForm(Name = "file")] IFormFile File)
         {
-            CompressLZW compressLZW = new CompressLZW();
-            var extensionTipo = Path.GetExtension(File.FileName);
-            if (extensionTipo == ".txt")
+            try
             {
-                using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+                CompressLZW compressLZW = new CompressLZW();
+                var extensionTipo = Path.GetExtension(File.FileName);
+                if (extensionTipo == ".txt")
                 {
-                    compressLZW.CompresionLZWImportar(thisFile);
+                    using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+                    {
+                        compressLZW.CompresionLZWImportar(thisFile);
+                    }
                 }
+                else if (extensionTipo == ".lzw")
+                {
+                    using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+                    {
+                        compressLZW.CompresionLZWExportar(thisFile);
+                    }
+                }
+                else { return NotFound(); }
+                return Ok();
             }
-            else if (extensionTipo == ".lzw")
+            catch (System.NullReferenceException)//No se envia nada
             {
-                using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
-                {
-                    compressLZW.CompresionLZWExportar(thisFile);
-                }
+                return NotFound();
             }
-            else { return NotFound(); }
-            return Ok();
         }
     }
 }

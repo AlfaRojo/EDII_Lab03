@@ -12,24 +12,31 @@ namespace EDII_Lab03.Controllers
         [HttpPost]
         public ActionResult Post([FromForm(Name = "file")] IFormFile File)
         {
-            var extensionTipo = Path.GetExtension(File.FileName);
-            CompressHuffman HuffmanCompress = new CompressHuffman();
-            if (extensionTipo == ".txt")
+            try
             {
-                using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+                var extensionTipo = Path.GetExtension(File.FileName);
+                CompressHuffman HuffmanCompress = new CompressHuffman();
+                if (extensionTipo == ".txt")
                 {
-                    HuffmanCompress.CompresionHuffmanImportar(thisFile);
+                    using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+                    {
+                        HuffmanCompress.CompresionHuffmanImportar(thisFile);
+                    }
                 }
+                else if (extensionTipo == ".huff")
+                {
+                    using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
+                    {
+                        HuffmanCompress.CompresionHuffmanExportar(thisFile);
+                    }
+                }
+                else { return NotFound(); }
+                return Ok();
             }
-            else if (extensionTipo == ".huff")
+            catch (System.NullReferenceException)//No se envia nada
             {
-                using (FileStream thisFile = new FileStream("TusArchivos/" + File.FileName, FileMode.OpenOrCreate))
-                {
-                    HuffmanCompress.CompresionHuffmanExportar(thisFile);
-                }
+                return NotFound();
             }
-            else { return NotFound(); }
-            return Ok();
         }
     }
 }
